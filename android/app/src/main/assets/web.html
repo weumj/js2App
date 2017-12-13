@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript View</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <script type="text/javascript">
+    (function(window){
+        var isIOS = !!window.webkit;
+        var isAndroid = !!window.AndroidInterface;
+
+        function lookupMethod(name){
+            var method;
+            
+            if(isIOS){
+                method = window.webkit.messageHandlers[name];
+                method && console.log("got iOS method : [" + name + "]")
+                return method ? method.postMessage.bind(method) : null;
+            } else if(isAndroid) {
+                method = window.AndroidInterface[name];
+                method && console.log("got android method : [" + name + "]")
+                return method ? method.bind(window.AndroidInterface) : null;
+            }
+            return null;
+        }
+        
+        function showToast(e){
+            e.preventDefault();
+
+            var message = document.getElementById("message").value;
+            var lengthLong = document.getElementById("length").checked;
+
+            var method = lookupMethod("showToast");
+
+            if(method){
+                if(isAndroid) {
+                    method(message, lengthLong);
+                } else if (isIOS){
+                    method({message: message, lengthLong: lengthLong});
+                }
+            }
+            return false;
+        }
+
+        function showLog(e){
+            e.preventDefault();
+
+            var message = document.getElementById("message2").value;
+            var value = parseInt(document.getElementById("value").value, 10);
+
+            var method = lookupMethod("showLog");
+
+
+            if(method){
+                if(isAndroid) {
+                    method(message, value);
+                } else if (isIOS){
+                    method({message: message, value: value});
+                }
+            }
+            return false;
+        }
+        
+        window.onload = function(){
+            var form = document.getElementById("form");
+            form.onsubmit = showToast;
+
+            var form2 = document.getElementById("form2");
+            form2.onsubmit = showLog;
+        }
+    })(window);
+    </script>
+</head>
+
+<body>
+
+<form id="form">
+    Message: <input id="message" name="message" type="text"/><br />
+    Long: <input id="length" name="length" type="checkbox" /><br />
+
+    <input type="submit" value="Make Toast" />
+</form>
+<div/>
+
+<form id="form2">
+    Message: <input id="message2" name="message" type="text"/><br />
+    Value: <input id="value" name="message" type="number"/><br />
+
+    <input type="submit" value="Make Log" />
+</form>
+
+</body>
+</html>
