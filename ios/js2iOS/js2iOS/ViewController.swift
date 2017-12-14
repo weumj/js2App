@@ -11,28 +11,29 @@ import WebKit
 
 class ViewController: UIViewController {
     var webView: WKWebView!
-    let methods = ["showToast", "showLog"]
+    let methods = ["showToast", "showLog", "getMessage"]
     
     override func loadView() {
         super.loadView()
         
-        webView = WKWebView(frame: .zero, configuration: getWebViewConfig())
+        webView = WKWebView(frame: .zero, configuration: getWebViewConfig(methods: methods))
         view = webView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if
+        guard
             let path = Bundle.main.path(forResource: "web", ofType: "html")
-        {
-            let url = URL(fileURLWithPath: path)
-            let req = URLRequest(url: url)
-
-            webView.load(req)
-        } else {
+        else {
             print("cannot load file")
+            return
         }
+        
+        let url = URL(fileURLWithPath: path)
+        let req = URLRequest(url: url)
+        
+        webView.load(req)
     }
 }
 
@@ -47,7 +48,7 @@ extension ViewController {
 }
 
 extension ViewController: WKScriptMessageHandler {
-    func getWebViewConfig() -> WKWebViewConfiguration {
+    func getWebViewConfig(methods: [String]) -> WKWebViewConfiguration {
         let contentController = WKUserContentController();
         
         methods.forEach {
@@ -61,6 +62,10 @@ extension ViewController: WKScriptMessageHandler {
         config.userContentController = contentController
         
         return config
+    }
+    
+    func callJsGetMessageCallback(message: String) {
+        webView.evaluateJavaScript("window.getMessageCallback && window.getMessageCallback('\(message)')")
     }
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -82,6 +87,8 @@ extension ViewController: WKScriptMessageHandler {
             {
                 showAlertViewController(message, buttonMessage: "lengthLong: [\(lengthLong)]", handler: nil)
             }
+        case "getMessage":
+            callJsGetMessageCallback(message: "message: [\(Int(arc4random_uniform(100) + 1))]")
         default:
             print("default")
         }

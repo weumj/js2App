@@ -9,6 +9,8 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
     private WebView webView;
@@ -42,9 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
         private Context context;
 
-        /*
-         * Need a reference to the context in order to sent a post message
-         */
         public WebViewJavaScriptInterface(Context context) {
             this.context = context;
         }
@@ -61,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
         @JavascriptInterface
         public void showLog(String message, int value) {
             Log.i("FromJS", String.format("string message: %s, int value: %d", message, value));
+        }
+
+        @JavascriptInterface
+        public String getMessage() {
+            return String.format(Locale.getDefault(), "message: [%d]", (int)(Math.random() * 100 + 1));
         }
     }
 }
