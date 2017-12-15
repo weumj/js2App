@@ -10,14 +10,13 @@ import UIKit
 import WebKit
 
 class ViewController: UIViewController {
-    var webView: WKWebView!
+    @IBOutlet weak var webView: WKWebView!
     let methods = ["showToast", "showLog", "getMessage"]
     
     override func loadView() {
         super.loadView()
-        
-        webView = WKWebView(frame: .zero, configuration: getWebViewConfig(methods: methods))
-        view = webView
+
+        webView.configuration.userContentController = makeUserContentController(methods: methods)
     }
     
     override func viewDidLoad() {
@@ -35,6 +34,12 @@ class ViewController: UIViewController {
         
         webView.load(req)
     }
+    
+    @IBAction func onTouchUpBtn(_ sender: Any) {
+        callJsGetInteger() {
+            self.showAlertViewController("value from JS : [\($0 ?? (-1))]")
+        }
+    }
 }
 
 extension ViewController {
@@ -48,7 +53,7 @@ extension ViewController {
 }
 
 extension ViewController: WKScriptMessageHandler {
-    func getWebViewConfig(methods: [String]) -> WKWebViewConfiguration {
+    func makeUserContentController(methods: [String]) -> WKUserContentController {
         let contentController = WKUserContentController();
         
         methods.forEach {
@@ -58,14 +63,21 @@ extension ViewController: WKScriptMessageHandler {
             )
         }
         
-        let config = WKWebViewConfiguration()
-        config.userContentController = contentController
-        
-        return config
+        return contentController
     }
     
     func callJsGetMessageCallback(message: String) {
         webView.evaluateJavaScript("window.getMessageCallback && window.getMessageCallback('\(message)')")
+    }
+    
+    func callJsGetInteger(callback: @escaping (Int?) -> ()) {
+        webView.evaluateJavaScript("window.getInteger && window.getInteger()") { (result, error) in
+            if let integer = result as? Int {
+                callback(integer)
+            } else {
+                callback(nil)
+            }
+        }
     }
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {

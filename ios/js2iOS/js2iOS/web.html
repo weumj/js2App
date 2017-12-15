@@ -91,6 +91,15 @@
 
             var btn = document.getElementById("button");
             btn.onclick = btnClick;
+
+            var input = document.getElementById("value2");
+            window.getInteger = function() {
+                try {
+                    return input.value ? parseInt(input.value, 10) : -1;
+                } catch(e) {
+                    return -1;
+                } 
+            }
         }
     })(window);
     </script>
@@ -115,6 +124,11 @@
 
 <button id="button">get a message from App</button>
 <div >message from App: [<span id="text"></span>]</div>
+
+<div>
+    JSValue (default: -1)
+    <input id="value2" name="message3" type="number" placeholder="-1"/><br />
+</div>
 
 </body>
 </html>

@@ -17,12 +17,54 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="EAO-ad-ljh">
+                                <rect key="frame" x="0.0" y="10" width="375" height="657"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7f0-dN-ZnB">
+                                        <rect key="frame" x="143" y="0.0" width="89" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="fMH-Fc-x9r"/>
+                                        </constraints>
+                                        <state key="normal" title="JsGetInteger"/>
+                                        <connections>
+                                            <action selector="onTouchUpBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Gqg-Aw-EpL"/>
+                                        </connections>
+                                    </button>
+                                    <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e3g-e5-e75">
+                                        <rect key="frame" x="0.0" y="40" width="375" height="617"/>
+                                        <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <wkWebViewConfiguration key="configuration">
+                                            <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                            <wkPreferences key="preferences"/>
+                                        </wkWebViewConfiguration>
+                                    </wkWebView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="e3g-e5-e75" firstAttribute="leading" secondItem="EAO-ad-ljh" secondAttribute="leading" id="DaT-eG-lCk"/>
+                                    <constraint firstAttribute="trailing" secondItem="e3g-e5-e75" secondAttribute="trailing" id="Jop-pC-dsN"/>
+                                    <constraint firstItem="7f0-dN-ZnB" firstAttribute="centerX" secondItem="EAO-ad-ljh" secondAttribute="centerX" id="KYI-6G-ebI"/>
+                                    <constraint firstItem="e3g-e5-e75" firstAttribute="top" secondItem="7f0-dN-ZnB" secondAttribute="bottom" id="MHj-kN-OAA"/>
+                                    <constraint firstAttribute="bottom" secondItem="e3g-e5-e75" secondAttribute="bottom" id="yB0-cm-xH6"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="EAO-ad-ljh" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="10" id="1LS-f8-nP4"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="EAO-ad-ljh" secondAttribute="bottom" id="9Rt-MC-Ds1"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="EAO-ad-ljh" secondAttribute="trailing" id="MCB-mU-Fw4"/>
+                            <constraint firstItem="EAO-ad-ljh" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="dLl-R6-RXn"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="webView" destination="e3g-e5-e75" id="mQ7-VO-yxd"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="136.80000000000001" y="133.5832083958021"/>
         </scene>
     </scenes>
 </document>

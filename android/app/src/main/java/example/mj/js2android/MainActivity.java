@@ -5,6 +5,7 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Toast;
@@ -21,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        findViewById(R.id.button).setOnClickListener(MainActivity.this::onBtnClick);
+
         webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
 
@@ -31,6 +34,24 @@ public class MainActivity extends AppCompatActivity {
 
         webView.loadUrl("file:///android_asset/web.html");
         webView.addJavascriptInterface(new WebViewJavaScriptInterface(this), jsInterfaceNamespace);
+    }
+
+    private void onBtnClick(View v) {
+        callJsGetInteger();
+    }
+
+    private void callJsGetInteger() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            webView.evaluateJavascript("window.getInteger && window.getInteger()",
+                this::jsGetIntegerCallback
+            );
+        }
+    }
+
+    private void jsGetIntegerCallback(String value) {
+        int integer = Integer.parseInt(value);
+
+        Toast.makeText(this, String.format("value from JS: [%d]", integer), Toast.LENGTH_SHORT).show();
     }
 
     @Override
